@@ -1,31 +1,46 @@
 
 const { VnMedicine } = require('../models/VnMedicine');
 const XLSX = require('xlsx')
-const addVnMedicine = () => {
-    const workbook = XLSX.readFile('/Users/lananh/Documents/study/20222/datkktmt/UTProject-be /controllers/medicine.xlsx');
-    const sheetName = workbook.SheetNames[3];
-    const worksheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-    //console.log(jsonData);
-    jsonData.forEach(element => {
-        console.log(element);
-        let bike = new VnMedicine({
-            component: element.__EMPTY, 
-            cure: element.__EMPTY_1, 
-            gene: element.__EMPTY_2, 
-            medicine_name: element.__EMPTY_3,
-            content: element.__EMPTY_4,
-            dosage_form: element.__EMPTY_5,
-            packing: element.__EMPTY_6,
-            company_name: element.__EMPTY_7,
-            circulation_permit: element.__EMPTY_8
+const addVnMedicineApproved = (req,res) => {
+    let {component,cure,gene,medicine_name, content, dosage_form,packing, company_name, circulation_permit}= req.body;
+    console.log(company_name);
+    let m = new VnMedicine({
+            component: component, 
+            cure: cure, 
+            gene: gene, 
+            medicine_name: medicine_name,
+            content: content,
+            dosage_form: dosage_form,
+            packing: packing,
+            company_name: company_name !=undefined ? company_name: "Chưa có thông tin",
+            circulation_permit: circulation_permit!=undefined ? circulation_permit: "Chưa có thông tin",
+            approved: true
         });
-        bike.save();
+    m.save().then(rs=>{
+        return res.json({status:true,data:rs})
+    });
+}
+const addVnMedicineNotApproved = (req,res)=>{
+    let {component,cure,gene,medicine_name, content, dosage_form,packing, company_name}= req.body;
+    let m = new VnMedicine({
+            component: component, 
+            cure: cure, 
+            gene: gene, 
+            medicine_name: medicine_name,
+            content: content,
+            dosage_form: dosage_form,
+            packing: packing,
+            company_name: company_name !=undefined ? company_name: "Chưa có thông tin",
+            approved: false
+        });
+    m.save().then(rs=>{
+        return res.json({status:true,data:rs})
     });
 }
 const getVnMedicine = async (req,res)=>{
     let rs =await VnMedicine.find({});
     return res.json({ status: true, data:rs })
 }
-exports.addVnMedicine = addVnMedicine;
+exports.addVnMedicineApproved = addVnMedicineApproved;
 exports.getVnMedicine = getVnMedicine;
+exports.addVnMedicineNotApproved = addVnMedicineNotApproved;

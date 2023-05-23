@@ -30,11 +30,16 @@ const vnMedicineSchema= new mongoose.Schema({
     },
     company_name:{
         type:String,
-        required: false
+        required: true,
+        default: "Chưa có thông tin"
     },
     circulation_permit:{
         type:String,
-        required: false
+        required:false
+    },
+    approved:{
+        type: Boolean,
+        required: true
     }
 })
 
