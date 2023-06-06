@@ -2,13 +2,10 @@
 const { VnMedicine } = require('../models/VnMedicine');
 const XLSX = require('xlsx')
 const addVnMedicineApproved = (req,res) => {
-    let {component,cure,gene,medicine_name, content, dosage_form,packing, company_name, circulation_permit}= req.body;
-    console.log(company_name);
-    let m = new VnMedicine({
-            component: component, 
-            cure: cure, 
-            gene: gene, 
+    let {component,medicine_name, content, dosage_form,packing, company_name, circulation_permit}= req.body;
+    let m = new VnMedicine({ 
             medicine_name: medicine_name,
+            component: component,
             content: content,
             dosage_form: dosage_form,
             packing: packing,
@@ -21,12 +18,10 @@ const addVnMedicineApproved = (req,res) => {
     });
 }
 const addVnMedicineNotApproved = (req,res)=>{
-    let {component,cure,gene,medicine_name, content, dosage_form,packing, company_name}= req.body;
+    let {component,medicine_name, content, dosage_form,packing, company_name}= req.body;
     let m = new VnMedicine({
-            component: component, 
-            cure: cure, 
-            gene: gene, 
             medicine_name: medicine_name,
+            component: component,
             content: content,
             dosage_form: dosage_form,
             packing: packing,
@@ -38,9 +33,14 @@ const addVnMedicineNotApproved = (req,res)=>{
     });
 }
 const getVnMedicine = async (req,res)=>{
-    let rs =await VnMedicine.find({});
+    let rs =await VnMedicine.find({}).populate('component');
     return res.json({ status: true, data:rs })
+}
+const getVnMedicineOfComponent = async(req,res)=>{
+    let rs = await VnMedicine.find({component: req.body.component}).populate('component');
+    return res.json({status:true, data:rs})
 }
 exports.addVnMedicineApproved = addVnMedicineApproved;
 exports.getVnMedicine = getVnMedicine;
 exports.addVnMedicineNotApproved = addVnMedicineNotApproved;
+exports.getVnMedicineOfComponent = getVnMedicineOfComponent;

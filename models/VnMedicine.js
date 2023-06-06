@@ -1,20 +1,14 @@
 const mongoose = require('mongoose');
+const { ActiveIngredient } = require('./Component');
 const vnMedicineSchema= new mongoose.Schema({
-    component:{
-        type:String,
-        required: false
-    },
-    cure:{
-        type:String,
-        required:false
-    },
-    gene:{
-        type:String,
-        required: false
-    },
     medicine_name:{
         type:String,
         required: false
+    },
+    component:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "ActiveIngredient"
     },
     content:{
         type:String,
