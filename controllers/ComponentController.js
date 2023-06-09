@@ -7,7 +7,8 @@ const addComponent = (req, res) => {
     let m = new ActiveIngredient({
         component: component,
         cure: cure,
-        gene: gene
+        gene: gene, 
+        approved: approved
     });
     m.save().then(rs => {
         return res.json({ status: true, data: rs })

@@ -11,6 +11,10 @@ const activeIngredientSchema= new mongoose.Schema({
     gene:{
         type:String,
         required: false
+    },
+    approved: {
+        type: Boolean,
+        required : true 
     }
 })
 
