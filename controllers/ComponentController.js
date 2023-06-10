@@ -3,7 +3,7 @@ const { VnMedicine } = require('../models/VnMedicine');
 const XLSX = require('xlsx');
 const { ActiveIngredient } = require('../models/Component');
 const addComponent = (req, res) => {
-    let { component, cure, gene } = req.body;
+    let { component, cure, gene ,approved} = req.body;
     let m = new ActiveIngredient({
         component: component,
         cure: cure,
