@@ -37,6 +37,43 @@ const getComponent = async (req, res) => {
     }
 };
 
+const editCompoment = async(req,res)=>{
+    try {
+        let {componentId, cure, gene, component, approved} = req.body;
+        let i = await ActiveIngredient.findOneAndUpdate({_id: componentId},{
+            component: component,
+            cure: cure,
+            gene: gene,
+            approved: approved
+        },{
+            new: true 
+        })
+        if(!i){
+            return res.json({status:false, msg: 'ComponentId is not found'})
+        }
+        return res.json({status: true, data: i})
+    } catch (error) {
+        return res.json({status:false, error: error.message})
+    }
+}
+const deleteComponent = async(req, res)=>{
+    try {
+        let {componentId} = req.body;
+        let i = await ActiveIngredient.findOneAndRemove({_id: componentId})
+        let medicines = await VnMedicine.find({component: componentId})
+        for (var j =0 ;j < medicines.length; j++){
+            await VnMedicine.findOneAndRemove({_id: medicines[j]._id})
+        }
+        if(!i){
+            return res.json({status:false, msg: 'ComponentId is not found'})
+        }
+        return res.json({status: true, msg : "Delete successfully"})
+    } catch (error) {
+        return res.json({status: false, error: error.message})
+    }
+}
 
 exports.getComponent = getComponent;
 exports.addComponent = addComponent;
+exports.editCompoment = editCompoment;
+exports.deleteComponent = deleteComponent;
