@@ -19,4 +19,6 @@ router.post("/api/add-component",ComponentController.addComponent)
 router.get("/api/components",ComponentController.getComponent)
 router.post("/api/edit-component", ComponentController.editCompoment)
 router.post("/api/delete-component", ComponentController.deleteComponent)
+router.get('/api/approved-component',ComponentController.getApprovedComponent);
+router.get('/api/not-approved-component',ComponentController.getNotApprovedComponent)
 module.exports= router;

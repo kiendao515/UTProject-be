@@ -36,7 +36,51 @@ const getComponent = async (req, res) => {
         return res.json({ status: false, error: error.message });
     }
 };
+const getApprovedComponent = async(req,res)=>{
+    try {
+        const page = parseInt(req.query.page) || 1; // Lấy số trang từ query parameter, mặc định là trang đầu tiên (1)
+        const perPage = 5; // Số lượng bản ghi trên mỗi trang
 
+        const totalDocuments = await ActiveIngredient.countDocuments({approved: true});
+        const totalPages = Math.ceil(totalDocuments / perPage);
+
+        const skip = (page - 1) * perPage;
+        let rs = await ActiveIngredient.find({approved: true}).skip(skip).limit(perPage).lean();
+
+        for (let i = 0; i < rs.length; i++) {
+            let vnMedicines = await VnMedicine.find({ component: rs[i]._id }).lean();
+            rs[i] = { ...rs[i], medicines: vnMedicines };
+        }
+
+        console.log(rs);
+        return res.json({ status: true, data: rs, metadata: { currentPage: page ,totalPage: totalPages} });
+    } catch (error) {
+        return res.json({ status: false, error: error.message });
+    }
+}
+
+const getNotApprovedComponent = async(req,res)=>{
+    try {
+        const page = parseInt(req.query.page) || 1; // Lấy số trang từ query parameter, mặc định là trang đầu tiên (1)
+        const perPage = 5; // Số lượng bản ghi trên mỗi trang
+
+        const totalDocuments = await ActiveIngredient.countDocuments({approved: false});
+        const totalPages = Math.ceil(totalDocuments / perPage);
+
+        const skip = (page - 1) * perPage;
+        let rs = await ActiveIngredient.find({approved: false}).skip(skip).limit(perPage).lean();
+
+        for (let i = 0; i < rs.length; i++) {
+            let vnMedicines = await VnMedicine.find({ component: rs[i]._id }).lean();
+            rs[i] = { ...rs[i], medicines: vnMedicines };
+        }
+
+        console.log(rs);
+        return res.json({ status: true, data: rs, metadata: { currentPage: page ,totalPage: totalPages} });
+    } catch (error) {
+        return res.json({ status: false, error: error.message });
+    }
+}
 const editCompoment = async(req,res)=>{
     try {
         let {componentId, cure, gene, component, approved} = req.body;
@@ -77,3 +121,5 @@ exports.getComponent = getComponent;
 exports.addComponent = addComponent;
 exports.editCompoment = editCompoment;
 exports.deleteComponent = deleteComponent;
+exports.getApprovedComponent = getApprovedComponent;
+exports.getNotApprovedComponent = getNotApprovedComponent;
