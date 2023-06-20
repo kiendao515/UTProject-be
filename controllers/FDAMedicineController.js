@@ -24,8 +24,22 @@ const addFdaMedicine = async(req,res) => {
 
 }
 const getFdaMedicine = async (req, res) => {
-    let rs = await FdaMedicine.find({});
-    return res.json({ status: true, data: rs })
-}
+    try {
+        const page = parseInt(req.query.page) || 1; // Lấy số trang từ query parameter, mặc định là trang đầu tiên (1)
+        const perPage = 5; // Số lượng bản ghi trên mỗi trang
+
+        const totalDocuments = await FdaMedicine.countDocuments({});
+        const totalPages = Math.ceil(totalDocuments / perPage);
+
+        const skip = (page - 1) * perPage;
+        let rs = await FdaMedicine.find({}).skip(skip).limit(perPage).lean();
+
+        console.log(rs);
+        return res.json({ status: true, data: rs, metadata: { currentPage: page, totalPage : totalPages } });
+    } catch (error) {
+        return res.json({ status: false, error: error.message });
+    }
+};
+
 exports.addFdaMedicine = addFdaMedicine;
 exports.getFdaMedicine = getFdaMedicine;
