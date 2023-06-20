@@ -12,6 +12,8 @@ router.post("/api/delete-vn-medicine", VnController.deleteVnMedicine)
 
 router.post("/api/fda-medicine",FdaController.addFdaMedicine);
 router.get("/api/fda-medicine",FdaController.getFdaMedicine)
+router.post("/api/edit-fda-medicine",FdaController.editFDAMedicine);
+router.post("/api/delete-fda-medicine",FdaController.deleteFDAMedicine)
 
 router.post("/api/add-component",ComponentController.addComponent)
 router.get("/api/components",ComponentController.getComponent)
