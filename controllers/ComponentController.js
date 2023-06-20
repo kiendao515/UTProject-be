@@ -16,17 +16,27 @@ const addComponent = (req, res) => {
 }
 const getComponent = async (req, res) => {
     try {
-        let rs = await ActiveIngredient.find({}).lean();
-        for (var i = 0; i < rs.length; i++) {
-            let vnMedicines = await VnMedicine.find({ component: rs[i]._id }).lean()
-            rs[i] ={...rs[i],medicines: vnMedicines}
+        const page = parseInt(req.query.page) || 1; // Lấy số trang từ query parameter, mặc định là trang đầu tiên (1)
+        const perPage = 5; // Số lượng bản ghi trên mỗi trang
+
+        const totalDocuments = await ActiveIngredient.countDocuments({});
+        const totalPages = Math.ceil(totalDocuments / perPage);
+
+        const skip = (page - 1) * perPage;
+        let rs = await ActiveIngredient.find({}).skip(skip).limit(perPage).lean();
+
+        for (let i = 0; i < rs.length; i++) {
+            let vnMedicines = await VnMedicine.find({ component: rs[i]._id }).lean();
+            rs[i] = { ...rs[i], medicines: vnMedicines };
         }
+
         console.log(rs);
-        return res.json({ status: true, data: rs })
+        return res.json({ status: true, data: rs, metadata: { currentPage: page ,totalPage: totalPages} });
     } catch (error) {
         return res.json({ status: false, error: error.message });
     }
+};
 
-}
+
 exports.getComponent = getComponent;
 exports.addComponent = addComponent;
