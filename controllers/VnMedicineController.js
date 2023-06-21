@@ -42,14 +42,15 @@ const getVnMedicineOfComponent = async(req,res)=>{
 }
 const updateVNMedicine = async (req,res)=>{
     try {
-        let {medicineId,medicine_name, content, dosage_form,packing, company_name, approved}= req.body;
+        let {medicineId,medicine_name, content, dosage_form,packing, company_name, approved, circulation_permit}= req.body;
         let rs = await VnMedicine.findOneAndUpdate({_id: medicineId},{
             medicine_name: medicine_name,
             content : content,
             dosage_form: dosage_form,
             packing: packing, 
             company_name: company_name, 
-            approved: approved
+            approved: approved,
+            circulation_permit: circulation_permit
         },{new: true})
         if(!rs){
             return res.json({status:false, msg: 'MedicineId not found'})
