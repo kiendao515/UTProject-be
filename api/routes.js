@@ -17,6 +17,7 @@ router.post("/api/delete-fda-medicine",FdaController.deleteFDAMedicine)
 
 router.post("/api/add-component",ComponentController.addComponent)
 router.get("/api/components",ComponentController.getComponent)
+router.get("/api/total/components",ComponentController.getAllComponents)
 router.post("/api/edit-component", ComponentController.editCompoment)
 router.post("/api/delete-component", ComponentController.deleteComponent)
 router.get('/api/approved-component',ComponentController.getApprovedComponent);

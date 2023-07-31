@@ -36,6 +36,25 @@ const getComponent = async (req, res) => {
         return res.json({ status: false, error: error.message });
     }
 };
+const getAllComponents = async (req, res) => {
+    try {
+      let rs = await ActiveIngredient.find({});
+  
+      // Convert each Mongoose document to a plain JavaScript object
+      rs = rs.map((doc) => doc.toObject());
+  
+      for (let i = 0; i < rs.length; i++) {
+        let vnMedicines = await VnMedicine.find({ component: rs[i]._id }).lean();
+        rs[i] = { ...rs[i], medicines: vnMedicines };
+      }
+  
+      return res.json({ status: true, data: rs });
+    } catch (err) {
+      console.error("Error:", err);
+      return res.status(500).json({ status: false, error: "Internal Server Error" });
+    }
+  };
+  
 const getApprovedComponent = async(req,res)=>{
     try {
         const page = parseInt(req.query.page) || 1; // Lấy số trang từ query parameter, mặc định là trang đầu tiên (1)
@@ -123,3 +142,4 @@ exports.editCompoment = editCompoment;
 exports.deleteComponent = deleteComponent;
 exports.getApprovedComponent = getApprovedComponent;
 exports.getNotApprovedComponent = getNotApprovedComponent;
+exports.getAllComponents = getAllComponents;
